@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "852621726189",
+    "firebase_url": "https://absoftmanager-3bc16.firebaseio.com",
+    "project_id": "absoftmanager-3bc16",
+    "storage_bucket": "absoftmanager-3bc16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852621726189:android:735ba054274f054e",
+        "android_client_info": {
+          "package_name": "com.od.twins.absoftmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852621726189-2ircs3l58c7qur8jodgkumkc8dduc5a2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.od.twins.absoftmanager",
+            "certificate_hash": "1f83f9df5c8bf656fafb529d3ac10c84dcd29020"
+          }
+        },
+        {
+          "client_id": "852621726189-nfkleuobrcdhv2nqamsk540usav4ep1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeI7ziSadZRuDkE_jrSKW8boJ18yUzUPw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852621726189-99gg444rn2svre2dareg4nkiptpshdld.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stanislavkostin.AliceinWonderland2",
+                "app_store_id": "123456777"
+              }
+            },
+            {
+              "client_id": "852621726189-nfkleuobrcdhv2nqamsk540usav4ep1e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
