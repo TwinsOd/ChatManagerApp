@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
         if (null == name) return;
         if (!mSocket.connected()) return;
 
-        mSocket.emit("info_user", name, nameRoom, "manager");
+        mSocket.emit("info_manager", name, nameRoom, "manager");
         Log.i("sendInfo", "sendInfo:finish = " + name);
     }
 
@@ -127,11 +127,6 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
         @Override
         public void call(final Object... args) {
             Log.i(TAG, "onNewMessage:**********************************");
-//            Type listType = new TypeToken<ArrayList<RoomModel>>() {
-//            }.getType();
-//            Gson gson = new Gson();
-//            listRoom = gson.fromJson(args[0].toString(), listType);
-            //{"event":"messageReceived","name":"device  Samsung","text":"ааа","time":"18:56:15"}
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
