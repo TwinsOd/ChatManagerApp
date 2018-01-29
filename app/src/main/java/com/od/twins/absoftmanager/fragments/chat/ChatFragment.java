@@ -1,31 +1,32 @@
 package com.od.twins.absoftmanager.fragments.chat;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.od.twins.absoftmanager.R;
+import com.od.twins.absoftmanager.callback.OnChatListener;
 import com.od.twins.absoftmanager.fragments.room_list.MessageModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnChatListener}
- * interface.
- */
+import static com.od.twins.absoftmanager.fragments.room_list.MessageModel.TYPE_MESSAGE;
+
 public class ChatFragment extends Fragment {
-    private OnChatListener mListener;
     private List<MessageModel> listMessage = new ArrayList<>();
     private ChatRecyclerViewAdapter adapter;
+    private OnChatListener chatListener;
+    private EditText mInputMessageView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,34 +47,52 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new ChatRecyclerViewAdapter(listMessage, getContext());
-            recyclerView.setAdapter(adapter);
-        }
+        RecyclerView recyclerView = view.findViewById(R.id.list_chat);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ChatRecyclerViewAdapter(listMessage, getContext());
+        recyclerView.setAdapter(adapter);
+
+        mInputMessageView = view.findViewById(R.id.message_input);
+        mInputMessageView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int id, KeyEvent event) {
+                if (id == R.id.send || id == EditorInfo.IME_NULL) {
+                    chatListener.setTextMessage(getMessage());
+                    return true;
+                }
+                return false;
+            }
+        });
+        view.findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chatListener.setTextMessage(getMessage());
+            }
+        });
+//        mInputMessageView.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (null == mUserName) return;
+//                if (!mSocket.connected()) return;
+//
+//                if (!mTyping) {
+//                    mTyping = true;
+//                    mSocket.emit("typing");
+//                }
+//
+//                mTypingHandler.removeCallbacks(onTypingTimeout);
+//                mTypingHandler.postDelayed(onTypingTimeout, TYPING_TIMER_LENGTH);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//            }
+//        });
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnChatListener) {
-            mListener = (OnChatListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnChatListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (mListener != null)
-            mListener.onOutChat();
-        mListener = null;
     }
 
     public void setMessage(MessageModel model) {
@@ -81,8 +100,20 @@ public class ChatFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public interface OnChatListener {
-        // TODO: Update argument type and name
-        void onOutChat();
+    public void setChatListener(OnChatListener chatListener) {
+        this.chatListener = chatListener;
+    }
+
+    public String getMessage() {
+        String message = mInputMessageView.getText().toString().trim();
+        if (TextUtils.isEmpty(message)) {
+            mInputMessageView.requestFocus();
+            return null;
+        }
+        mInputMessageView.setText("");
+        if (!TextUtils.isEmpty(message)) {
+            setMessage(new MessageModel(message, "My message", TYPE_MESSAGE));
+        }
+        return message;
     }
 }

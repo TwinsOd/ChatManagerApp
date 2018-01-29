@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.od.twins.absoftmanager.Application;
 import com.od.twins.absoftmanager.R;
+import com.od.twins.absoftmanager.callback.OnChatListener;
 import com.od.twins.absoftmanager.fragments.chat.ChatFragment;
 import com.od.twins.absoftmanager.fragments.room_list.MessageModel;
 import com.od.twins.absoftmanager.fragments.room_list.RoomListFragment;
@@ -29,7 +31,7 @@ import io.socket.emitter.Emitter;
 
 import static com.od.twins.absoftmanager.fragments.room_list.MessageModel.TYPE_MESSAGE;
 
-public class MainActivity extends AppCompatActivity implements RoomListFragment.OnListRoomListener, ChatFragment.OnChatListener {
+public class MainActivity extends AppCompatActivity implements RoomListFragment.OnListRoomListener, OnChatListener {
     private Socket mSocket;
     private static final String TAG = "MainFragment";
     //    private String room = "room_1";
@@ -90,12 +92,10 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
         fragmentTransaction.commit();
     }
 
-    private void sendInfo(String nameRoom) {
-        Log.i("sendInfo", "sendInfo:start = " + name);
-        if (null == name) return;
+    private void sendInfo() {
         if (!mSocket.connected()) return;
 
-        mSocket.emit("info_manager", name, nameRoom, "manager");
+        mSocket.emit("info_manager", name);
         Log.i("sendInfo", "sendInfo:finish = " + name);
     }
 
@@ -116,8 +116,10 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
                         roomListFragment = RoomListFragment.newInstance();
                         roomListFragment.setList(listRoom);
                         onShowFragment(roomListFragment, false);
-                    } else
+                    } else {
+                        roomListFragment.setList(listRoom);
                         roomListFragment.updateList();
+                    }
                 }
             });
         }
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    sendInfo(null);
+                    sendInfo();
                 }
             });
         }
@@ -178,14 +180,21 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
 
     @Override
     public void onClick(RoomModel item) {
-        Log.i(TAG, "onOutChat:**********************************");
-        sendInfo(item.getRoomName());
+        Log.i(TAG, "onIGonChat:**********************************");
+        mSocket.emit("room_in", item.getRoomName());
         chatFragment = ChatFragment.newInstance();
+        chatFragment.setChatListener(this);
         onShowFragment(chatFragment, true);
     }
 
     @Override
     public void onOutChat() {
         mSocket.emit("room_out", "manager");
+    }
+
+    @Override
+    public void setTextMessage(String message) {
+        if (!TextUtils.isEmpty(message))
+            mSocket.emit("message", message);
     }
 }

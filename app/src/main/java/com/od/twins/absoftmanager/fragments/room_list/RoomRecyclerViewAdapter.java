@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerViewAdapter.ViewHolder> {
 
-    private final List<RoomModel> mValues;
+    private List<RoomModel> mValues;
     private final RoomListFragment.OnListRoomListener mListener;
 
     public RoomRecyclerViewAdapter(List<RoomModel> items, RoomListFragment.OnListRoomListener listener) {
@@ -53,6 +53,10 @@ public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerVi
             return mValues.size();
         else
             return 0;
+    }
+
+    public void setList(List<RoomModel> list) {
+        mValues = list;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

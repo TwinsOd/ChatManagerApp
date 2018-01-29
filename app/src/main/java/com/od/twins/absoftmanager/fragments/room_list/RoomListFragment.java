@@ -52,6 +52,9 @@ public class RoomListFragment extends Fragment {
 
     public void setList(List<RoomModel> list) {
         listRoomModel = list;
+        if (adapter != null) {
+            adapter.setList(list);
+        }
     }
 
     public void updateList() {
