@@ -1,5 +1,9 @@
 package com.od.twins.absoftmanager.activity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -22,6 +27,9 @@ import com.od.twins.absoftmanager.models.RoomModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +40,7 @@ import io.socket.emitter.Emitter;
 import static com.od.twins.absoftmanager.fragments.room_list.MessageModel.TYPE_MESSAGE;
 
 public class MainActivity extends AppCompatActivity implements RoomListFragment.OnListRoomListener, OnChatListener {
+    private final int RESULT_LOAD_IMG = 23;
     private Socket mSocket;
     private static final String TAG = "MainFragment";
     //    private String room = "room_1";
@@ -193,8 +202,39 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
     }
 
     @Override
+    public void onSetImage() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+    }
+
+    @Override
     public void setTextMessage(String message) {
         if (!TextUtils.isEmpty(message))
-            mSocket.emit("message", message);
+            mSocket.emit("message", "text", message);
+    }
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+
+
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                mSocket.emit("message", "image", byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+            }
+
+        } else {
+            Toast.makeText(MainActivity.this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+        }
     }
 }

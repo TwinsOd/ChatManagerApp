@@ -8,4 +8,6 @@ public interface OnChatListener {
     public void setTextMessage(String massage);
 
     public void onOutChat();
+
+    public void onSetImage();
 }

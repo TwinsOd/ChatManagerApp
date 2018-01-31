@@ -69,6 +69,12 @@ public class ChatFragment extends Fragment {
                 chatListener.setTextMessage(getMessage());
             }
         });
+        view.findViewById(R.id.send_image_file).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chatListener.onSetImage();
+            }
+        });
 //        mInputMessageView.addTextChangedListener(new TextWatcher() {
 //            @Override
 //            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
