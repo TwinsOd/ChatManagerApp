@@ -20,12 +20,9 @@ import com.od.twins.absoftmanager.Application;
 import com.od.twins.absoftmanager.R;
 import com.od.twins.absoftmanager.callback.OnChatListener;
 import com.od.twins.absoftmanager.fragments.chat.ChatFragment;
-import com.od.twins.absoftmanager.fragments.room_list.MessageModel;
 import com.od.twins.absoftmanager.fragments.room_list.RoomListFragment;
+import com.od.twins.absoftmanager.models.MessageModel;
 import com.od.twins.absoftmanager.models.RoomModel;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -36,8 +33,6 @@ import java.util.List;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-
-import static com.od.twins.absoftmanager.fragments.room_list.MessageModel.TYPE_MESSAGE;
 
 public class MainActivity extends AppCompatActivity implements RoomListFragment.OnListRoomListener, OnChatListener {
     private final int RESULT_LOAD_IMG = 23;
@@ -141,18 +136,9 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String username;
-                    String message;
-                    try {
-                        Log.i("onNewMessage", data.toString());
-                        username = data.getString("name");
-                        message = data.getString("text");
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.getMessage());
-                        return;
-                    }
-                    chatFragment.setMessage(new MessageModel(message, username, TYPE_MESSAGE));
+                    Gson gson = new Gson();
+                    MessageModel messageModel = gson.fromJson(args[0].toString(), MessageModel.class);
+                    chatFragment.setMessage(messageModel);
                 }
             });
         }
@@ -217,8 +203,6 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
-
-
         if (resultCode == RESULT_OK) {
             try {
                 final Uri imageUri = data.getData();

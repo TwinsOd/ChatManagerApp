@@ -15,12 +15,10 @@ import android.widget.TextView;
 
 import com.od.twins.absoftmanager.R;
 import com.od.twins.absoftmanager.callback.OnChatListener;
-import com.od.twins.absoftmanager.fragments.room_list.MessageModel;
+import com.od.twins.absoftmanager.models.MessageModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.od.twins.absoftmanager.fragments.room_list.MessageModel.TYPE_MESSAGE;
 
 public class ChatFragment extends Fragment {
     private List<MessageModel> listMessage = new ArrayList<>();
@@ -118,7 +116,7 @@ public class ChatFragment extends Fragment {
         }
         mInputMessageView.setText("");
         if (!TextUtils.isEmpty(message)) {
-            setMessage(new MessageModel(message, "My message", TYPE_MESSAGE));
+            setMessage(new MessageModel("My message", message, "text"));
         }
         return message;
     }
