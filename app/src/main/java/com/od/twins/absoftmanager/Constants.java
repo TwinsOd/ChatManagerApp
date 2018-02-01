@@ -21,4 +21,6 @@ public class Constants {
     public static final int IMAGE_TYPE = 2;
     public static final int FILE_TYPE = 3;
 
+    public static final String URL = "url";
+
 }
