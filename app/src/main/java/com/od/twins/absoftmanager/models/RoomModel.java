@@ -9,6 +9,7 @@ import java.util.List;
 public class RoomModel {
     private String roomName;
     private String nicknameCreator;
+    private long timeCreated;
     private List<ClientModel> listClient;
 
     public String getRoomName() {
@@ -33,5 +34,13 @@ public class RoomModel {
 
     public void setListClient(List<ClientModel> listClient) {
         this.listClient = listClient;
+    }
+
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
     }
 }

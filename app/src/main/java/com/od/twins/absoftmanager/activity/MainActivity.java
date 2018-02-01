@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
     //    private String room = "room_1";
 //    private String nameUsers;
 //    private String message;
-    private String name = "Manager_911";
+    private String name;
     private List<RoomModel> listRoom;
     private ChatFragment chatFragment;
     private RoomListFragment roomListFragment;
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
         FirebaseMessaging.getInstance().subscribeToTopic("manager_android");
 
         Application app = (Application) getApplication();
+        name = app.getNickName();
         mSocket = app.getSocket();
         mSocket.on("message", onNewMessage);
         mSocket.on("room_list", onRoomList);

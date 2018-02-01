@@ -29,7 +29,7 @@ public class SplashActivity extends Activity {
                 if (user != null) {
                     // User is signed in
                     Log.d("SplashActivity", "onAuthStateChanged:signed_in:" + user.getUid());
-                    showMainActivity();
+                    showLoginActivity();
                 } else {
                     // User is signed out
                     Log.d("SplashActivity", "onAuthStateChanged:signed_out");
@@ -48,7 +48,7 @@ public class SplashActivity extends Activity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("SplashActivity", "signInAnonymously:success");
-                            showMainActivity();
+                            showLoginActivity();
                         } else {
                             Log.w("SplashActivity", "signInAnonymously:failure", task.getException());
                             Toast.makeText(SplashActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
@@ -59,6 +59,12 @@ public class SplashActivity extends Activity {
 
     private void showMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void showLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

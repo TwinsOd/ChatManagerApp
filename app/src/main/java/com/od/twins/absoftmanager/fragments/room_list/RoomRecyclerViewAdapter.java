@@ -9,17 +9,23 @@ import android.widget.TextView;
 import com.od.twins.absoftmanager.R;
 import com.od.twins.absoftmanager.models.RoomModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerViewAdapter.ViewHolder> {
 
     private List<RoomModel> mValues;
     private final RoomListFragment.OnListRoomListener mListener;
+    private final SimpleDateFormat formatterDate;
 
     public RoomRecyclerViewAdapter(List<RoomModel> items, RoomListFragment.OnListRoomListener listener) {
         mValues = items;
         mListener = listener;
+        formatterDate = new SimpleDateFormat("HH:mm", Locale.US);
+
     }
 
     @Override
@@ -32,8 +38,9 @@ public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerVi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getRoomName());
-        holder.mContentView.setText(String.format("Nick creator is %s", mValues.get(position).getNicknameCreator()));
+        holder.mIdView.setText(holder.mItem.getRoomName());
+        holder.mContentView.setText(String.format("Nick creator: %s", holder.mItem.getNicknameCreator()));
+        holder.mTimeView.setText(String.format("time: %s", formatterDate.format(new Date(holder.mItem.getTimeCreated()))));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +69,7 @@ public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerVi
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
+        public final TextView mTimeView;
         public final TextView mContentView;
         public RoomModel mItem;
 
@@ -70,6 +78,7 @@ public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerVi
             mView = view;
             mIdView = view.findViewById(R.id.id);
             mContentView = view.findViewById(R.id.content);
+            mTimeView = view.findViewById(R.id.time);
         }
 
         @Override

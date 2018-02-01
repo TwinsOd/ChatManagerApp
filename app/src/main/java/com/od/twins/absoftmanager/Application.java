@@ -12,6 +12,8 @@ import io.socket.client.Socket;
 public class Application extends android.app.Application {
 
     private Socket mSocket;
+    private String mNickName;
+
     {
         try {
             mSocket = IO.socket(Constants.CHAT_SERVER_URL);
@@ -22,5 +24,14 @@ public class Application extends android.app.Application {
 
     public Socket getSocket() {
         return mSocket;
+    }
+
+    public String getNickName() {
+        return mNickName;
+    }
+
+    public void setNickName(String mNickName) {
+        if (this.mNickName == null && mNickName != null)
+            this.mNickName = mNickName;
     }
 }
