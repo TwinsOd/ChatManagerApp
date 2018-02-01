@@ -39,8 +39,8 @@ public class RoomRecyclerViewAdapter extends RecyclerView.Adapter<RoomRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(holder.mItem.getRoomName());
-        holder.mContentView.setText(String.format("Nick creator: %s", holder.mItem.getNicknameCreator()));
-        holder.mTimeView.setText(String.format("time: %s", formatterDate.format(new Date(holder.mItem.getTimeCreated()))));
+        holder.mContentView.setText(holder.mItem.getNicknameCreator());
+        holder.mTimeView.setText(formatterDate.format(new Date(holder.mItem.getTimeCreated())));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
