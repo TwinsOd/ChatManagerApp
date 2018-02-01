@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +46,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             case TEXT_TYPE:
                 layout = R.layout.item_message;
                 break;
-//            case SENT_TEXT_TYPE:
-//                layout = R.layout.item_message_sent;
-//                break;
-//            case RECEIVED_TEXT_TYPE:
-//                layout = R.layout.item_message_received;
-//                break;
             case IMAGE_TYPE:
                 layout = R.layout.item_image;
                 break;
@@ -71,18 +66,18 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             case TEXT_TYPE:
                 holder.setMessage(model.getText());
                 holder.setUsername(model.getName_client());
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemLayout.getLayoutParams();
+                RecyclerView.LayoutParams paramsText = (RecyclerView.LayoutParams) holder.itemLayout.getLayoutParams();
                 if (model.getTime() == null) {
-                    params.setMarginStart(300);
-                    params.setMarginEnd(50);
+                    paramsText.setMarginStart(200);
+                    paramsText.setMarginEnd(50);
                 } else {
-                    params.setMarginEnd(300);
-                    params.setMarginStart(50);
+                    paramsText.setMarginEnd(200);
+                    paramsText.setMarginStart(50);
                 }
-                holder.itemLayout.setLayoutParams(params);
+                holder.itemLayout.setLayoutParams(paramsText);
                 break;
             case IMAGE_TYPE:
-                holder.setImageView(model.getName_image());
+                holder.setImageView(model, model.getTime() == null);
                 break;
             case FILE_TYPE:
 
@@ -130,19 +125,42 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             mMessageView.setText(message);
         }
 
-        public void setImageView(final String nameFile) {
+        public void setImageView(final MessageModel model, boolean isSentMessage) {
             if (null == mImageView) return;
-            Picasso
-                    .with(mImageView.getContext())
-                    .load(BASIC_IMAGE_URL + nameFile)
-                    .into(mImageView);
-            Log.i("ChatRecyclerViewAdapter", BASIC_IMAGE_URL + nameFile);
+            final String path;
+            if (model.getName_image() != null) {
+                path = BASIC_IMAGE_URL + model.getName_image();
+                Picasso
+                        .with(mImageView.getContext())
+                        .load(path)
+                        .into(mImageView);
+                Log.d("chat_adapter", "url = " + path);
+            } else {
+                path = model.getPath_local_image();
+                Picasso
+                        .with(mImageView.getContext())
+                        .load(path)
+                        .into(mImageView);
+                Log.d("chat_adapter", "path = " + path);
+            }
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startFullScreenActivityWithTransition(mImageView, BASIC_IMAGE_URL + nameFile);
+                    startFullScreenActivityWithTransition(mImageView, path);
                 }
             });
+
+            LinearLayout.LayoutParams paramsImage = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
+            if (isSentMessage) {
+                paramsImage.gravity = Gravity.END;
+                paramsImage.setMarginStart(200);
+                paramsImage.setMarginEnd(50);
+            } else {
+                paramsImage.gravity = Gravity.START;
+                paramsImage.setMarginStart(50);
+                paramsImage.setMarginEnd(200);
+            }
+            mImageView.setLayoutParams(paramsImage);
         }
 
         private int getUsernameColor(String username) {

@@ -19,7 +19,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         final EditText nickname_view = findViewById(R.id.nickname_view);
-        nickname_view.setText("Android Manager");
+        nickname_view.setText("Android_Manager");
         Button nextView = findViewById(R.id.next_view);
         nextView.setOnClickListener(new View.OnClickListener() {
             @Override

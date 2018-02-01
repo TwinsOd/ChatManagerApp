@@ -27,6 +27,7 @@ public class ChatFragment extends Fragment {
     private OnChatListener chatListener;
     private EditText mInputMessageView;
     private String name;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,7 +48,7 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.list_chat);
+        recyclerView = view.findViewById(R.id.list_chat);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ChatRecyclerViewAdapter(listMessage, getContext());
         recyclerView.setAdapter(adapter);
@@ -108,6 +109,7 @@ public class ChatFragment extends Fragment {
     public void setMessage(MessageModel model) {
         listMessage.add(model);
         adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(listMessage.size() - 1);
     }
 
     public void setChatListener(OnChatListener chatListener) {

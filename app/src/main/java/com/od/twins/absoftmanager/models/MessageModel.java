@@ -12,6 +12,7 @@ public class MessageModel {
     private String type;
     private String name_client;
     private String name_image;
+    private String path_local_image;
     private String text;
     private String time;
 
@@ -19,6 +20,10 @@ public class MessageModel {
         this.name_client = name_client;
         this.text = text;
         this.type = type;
+    }
+
+    public MessageModel(String name) {
+        name_client = name;
     }
 
     public String getType() {
@@ -74,5 +79,13 @@ public class MessageModel {
             default:
                 return 0;
         }
+    }
+
+    public String getPath_local_image() {
+        return path_local_image;
+    }
+
+    public void setPath_local_image(String path_local_image) {
+        this.path_local_image = path_local_image;
     }
 }

@@ -1,10 +1,12 @@
 package com.od.twins.absoftmanager.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -204,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && reqCode == RESULT_LOAD_IMG) {
             try {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
@@ -213,6 +215,10 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
                 selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
                 mSocket.emit("message", "image", byteArray);
+                MessageModel messageModel = new MessageModel(name);
+                messageModel.setType("image");
+                messageModel.setPath_local_image("file://" + getRealPathFromURI(imageUri));
+                chatFragment.setMessage(messageModel);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -221,5 +227,24 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
         } else {
             Toast.makeText(MainActivity.this, "You haven't picked Image", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public String getRealPathFromURI(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = 0;
+            if (cursor != null) {
+                column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return "empty";
     }
 }
