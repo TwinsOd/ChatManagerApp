@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.od.twins.absoftmanager.Application;
 import com.od.twins.absoftmanager.R;
 import com.od.twins.absoftmanager.callback.OnChatListener;
 import com.od.twins.absoftmanager.models.MessageModel;
@@ -25,6 +26,7 @@ public class ChatFragment extends Fragment {
     private ChatRecyclerViewAdapter adapter;
     private OnChatListener chatListener;
     private EditText mInputMessageView;
+    private String name;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -96,6 +98,10 @@ public class ChatFragment extends Fragment {
 //            public void afterTextChanged(Editable s) {
 //            }
 //        });
+
+        Application app = (Application) getActivity().getApplication();
+        name = app.getNickName();
+
         return view;
     }
 
@@ -116,7 +122,7 @@ public class ChatFragment extends Fragment {
         }
         mInputMessageView.setText("");
         if (!TextUtils.isEmpty(message)) {
-            setMessage(new MessageModel("My message", message, "text"));
+            setMessage(new MessageModel(name, message, "text"));
         }
         return message;
     }

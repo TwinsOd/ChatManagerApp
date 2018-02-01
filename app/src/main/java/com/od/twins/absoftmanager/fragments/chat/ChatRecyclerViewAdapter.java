@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.od.twins.absoftmanager.R;
@@ -44,6 +45,12 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             case TEXT_TYPE:
                 layout = R.layout.item_message;
                 break;
+//            case SENT_TEXT_TYPE:
+//                layout = R.layout.item_message_sent;
+//                break;
+//            case RECEIVED_TEXT_TYPE:
+//                layout = R.layout.item_message_received;
+//                break;
             case IMAGE_TYPE:
                 layout = R.layout.item_image;
                 break;
@@ -64,6 +71,15 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             case TEXT_TYPE:
                 holder.setMessage(model.getText());
                 holder.setUsername(model.getName_client());
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemLayout.getLayoutParams();
+                if (model.getTime() == null) {
+                    params.setMarginStart(300);
+                    params.setMarginEnd(50);
+                } else {
+                    params.setMarginEnd(300);
+                    params.setMarginStart(50);
+                }
+                holder.itemLayout.setLayoutParams(params);
                 break;
             case IMAGE_TYPE:
                 holder.setImageView(model.getName_image());
@@ -88,13 +104,14 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         TextView mUsernameView;
         TextView mMessageView;
         ImageView mImageView;
-
+        public LinearLayout itemLayout;
 
         public ViewHolder(View view) {
             super(view);
             mUsernameView = itemView.findViewById(R.id.username);
             mMessageView = itemView.findViewById(R.id.message);
             mImageView = itemView.findViewById(R.id.image);
+            itemLayout = itemView.findViewById(R.id.item_layout);
         }
 
         @Override
@@ -105,7 +122,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         public void setUsername(String username) {
             if (null == mUsernameView) return;
             mUsernameView.setText(username);
-            mUsernameView.setTextColor(getUsernameColor(username));
+//            mUsernameView.setTextColor(getUsernameColor(username));
         }
 
         public void setMessage(String message) {
