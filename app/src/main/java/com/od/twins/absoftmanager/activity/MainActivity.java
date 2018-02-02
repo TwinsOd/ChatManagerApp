@@ -1,5 +1,6 @@
 package com.od.twins.absoftmanager.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements RoomListFragment.
 
 //        ((TextView) findViewById(R.id.name_view)).setText(nameUsers);
 //        ((TextView) findViewById(R.id.room_view)).setText(room);
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
     }
 
     @Override
